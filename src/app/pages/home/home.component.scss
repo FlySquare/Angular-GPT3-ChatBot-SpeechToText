@@ -1,0 +1,22 @@
+.content{
+  @media (max-width: 768px) {
+    .chat{
+      margin-top: 50px;
+    }
+  }
+  .product{
+    p{
+      text-align: center;
+    }
+    a{
+      width: 100%;
+    }
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+  }
+  width: 100%;
+}

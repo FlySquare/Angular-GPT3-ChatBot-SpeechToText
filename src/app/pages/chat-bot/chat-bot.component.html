@@ -1,0 +1,30 @@
+<div class="content">
+  <div class="messages">
+      <div *ngFor="let message of messages" class="asd">
+        <div *ngIf="message.messageAuthor === 'ai'" class="ai">
+          <div class="aiMessage">
+            <div class="image">
+              <img src="assets/images/chat-avatar.png" alt="chat-avatar">
+              <small>{{message.date}}</small>
+            </div>
+            <p>{{message.message}}</p>
+          </div>
+        </div>
+        <div *ngIf="message.messageAuthor === 'customer'" class="customer">
+          <div class="customerMessage">
+            <div class="image">
+              <img src="assets/images/customer-avatar.webp" alt="chat-avatar">
+              <small>{{message.date}}</small>
+            </div>
+            <p>{{message.message}}</p>
+          </div>
+        </div>
+      </div>
+
+  </div>
+  <div class="textArea">
+      <textarea (keydown.enter)="sendMessage()" [disabled]="messages[messages.length - 1].messageAuthor === 'customer'" id="textArea" [(ngModel)]="textArea" name="textArea" rows="3" placeholder="Enter your message here..."></textarea>
+      <button [disabled]="messages[messages.length - 1].messageAuthor === 'customer'" id="sendButton" class="btn btn-success" type="button" (click)="sendMessage()" name="sendButton">Soru Sor</button>
+    <small>Botun cevap vermesi sistem yoğunluğuna bağlı olarak 5-40 saniye arası sürebilir</small>
+  </div>
+</div>

@@ -1,0 +1,48 @@
+.content{
+  hr{
+    height: 5px;
+    width: 100%;
+    opacity: 1;
+    color: black;
+  }
+  .avatar{
+    max-width: 400px;
+    padding: 20px;
+  }
+  .mic{
+    .micResponse{
+      padding: 0 20px 0 20px;
+    }
+    small{
+      margin: 0 0 15px 0;
+    }
+    .fa-microphone-slash{
+      color: red;
+    }
+    .fa-microphone{
+      color: green;
+    }
+    i{
+      font-size: 35px;
+      margin-bottom: 20px;
+      cursor: pointer;
+    }
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-content: center;
+    max-width: 400px;
+    justify-content: center;
+    align-items: center;
+  }
+  background: #295197;
+  width: 100%;
+  display: flex;
+  border-radius: 20px;
+  height: 100%;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+}

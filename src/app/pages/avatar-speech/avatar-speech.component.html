@@ -1,0 +1,15 @@
+<div class="content">
+  <div class="avatar">
+    <app-avatar></app-avatar>
+  </div>
+  <hr>
+  <div class="mic">
+    <div class="micResponse">
+      <p *ngIf="service.text !== ''">Algılanan Ses: {{ service.text }}</p>
+    </div>
+    <i (click)="stopService()" *ngIf="micIsEnabled" class="fa fa-microphone" aria-hidden="true"></i>
+    <i (click)="startService()" *ngIf="!micIsEnabled" class="fa fa-microphone-slash" aria-hidden="true"></i>
+    <small *ngIf="!micIsEnabled">Test etmeye mikforonunuzu açarak başlayabilirsiniz!</small>
+    <small *ngIf="micIsEnabled">Botun cevap vermesi için lütfen mikrofonunuzu kapatın!</small>
+  </div>
+</div>
