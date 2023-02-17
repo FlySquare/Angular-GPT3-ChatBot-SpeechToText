@@ -1,7 +1,7 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {VoiceRecognitionService} from "../../services/voice-recognition.service";
 import {GlobalService} from "../../services/global.service";
-import {environment} from "../../../environments/environments";
+import {environment} from "../../../environments/environment";
 
 @Component({
   selector: 'app-avatar',

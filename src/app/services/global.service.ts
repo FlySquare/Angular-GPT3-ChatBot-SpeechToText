@@ -8,7 +8,6 @@ import {Response} from "../models/Response";
   providedIn: 'root'
 })
 export class GlobalService {
-
   aiResponseText = new BehaviorSubject(null);
   constructor(
     private apiService: ApiService,

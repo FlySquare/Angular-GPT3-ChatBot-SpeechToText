@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import {environment} from "../../environments/environments";
+import {environment} from "../../environments/environment";
 import {Response} from "../models/Response";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
-
   constructor(
     private http: HttpClient
   ) { }
