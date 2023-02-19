@@ -1,6 +1,21 @@
 .content{
   .messages{
     .ai{
+      .actions{
+        .actionDetail{
+          padding: 5px 10px 5px 10px;
+          background: #1e59bf;
+          border-radius: 100px;
+          margin: 10px 10px 0 0;
+          cursor: pointer;
+        }
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-content: center;
+        justify-content: center;
+        align-items: center;
+      }
       .aiMessage{
         .image{
           small{
@@ -32,7 +47,7 @@
       }
       text-align: left;
       background: #081c48;
-      border-radius: 100px;
+      border-radius: 30px;
       padding: 12px 0 8px 15px;
       margin-top: 10px;
     }

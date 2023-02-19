@@ -2,6 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {VoiceRecognitionService} from "../../services/voice-recognition.service";
 import {GlobalService} from "../../services/global.service";
 import {Answer} from "../../models/Answer";
+import {Action} from "../../models/Action";
 
 @Component({
   selector: 'app-avatar-speech',
@@ -10,6 +11,7 @@ import {Answer} from "../../models/Answer";
 })
 export class AvatarSpeechComponent implements OnInit, OnDestroy{
   micIsEnabled = false;
+  actions: Action[] = [];
   constructor(
     public service: VoiceRecognitionService,
     private globalService: GlobalService
@@ -18,6 +20,7 @@ export class AvatarSpeechComponent implements OnInit, OnDestroy{
   }
 
   ngOnInit() {
+    this.actions = this.globalService.chatActions;
   }
 
   ngOnDestroy() {

@@ -1,7 +1,8 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, Inject, Input, OnDestroy, OnInit} from '@angular/core';
 import {VoiceRecognitionService} from "../../services/voice-recognition.service";
 import {GlobalService} from "../../services/global.service";
 import {environment} from "../../../environments/environment";
+import {DOCUMENT} from "@angular/common";
 
 @Component({
   selector: 'app-avatar',
@@ -9,44 +10,65 @@ import {environment} from "../../../environments/environment";
   styleUrls: ['./avatar.component.scss']
 })
 export class AvatarComponent implements OnInit {
+  loading = true;
+
   constructor(
     private voiceRecognitionService: VoiceRecognitionService,
     private globalService: GlobalService,
+    @Inject(DOCUMENT) private doc: any
   ) {
   }
 
+
   ngOnInit() {
+    this.setYourScriptTag('vhost', '', '//AC_VHost_Embed(' + environment.q1 + ',600,800,"",1,0,' + environment.q2 + ',0,1,0,"' + environment.q3 + '",0,1);');
+    this.setYourScriptTag('oddcast', 'https://vhss-d.oddcast.com/vhost_embed_functions_v4.php?acc=' + environment.q1 + '&js=0', '');
+    this.setYourScriptTag('sitapal', 'assets/scripts/sitepal.js', '');
+    let jsInterval = setInterval(() => {
+      if (document.getElementById('sitapal') && document.getElementById('oddcast')) {
+        //@ts-ignore
+        AC_VHost_Embed(environment.q1, 300, 300, "", 1, 0, environment.q2, 0, 1, 0, environment.q3, 0, 0);
+        clearInterval(jsInterval);
+      }
+    }, 100);
+    let interval = setInterval(() => {
+      let html5Player = document.getElementsByClassName('_html5Player');
+      if (html5Player.length > 0) {
+        this.loading = false;
+        document.getElementsByClassName('img-div')[0].appendChild(html5Player[0]);
+        let canvas = document.getElementById('canvasID:0');
+        if (canvas) {
+          canvas.style.left = "-20px";
+          clearInterval(interval);
+        }
+      }
+    }, 100);
     this.globalService.aiResponseText.subscribe((text: string) => {
       this.createAvatar(text);
     });
   }
 
   createAvatar(text: string) {
-    // @ts-ignore
-    SDK.applicationId = environment.applicationId;
-    // @ts-ignore
-    SDK.body = function() {
-      return document.getElementById("img-div")
+    if (document.getElementById('textToSpeak') && text !== '' && text !== null && text !== undefined) {
+      //@ts-ignore
+      document.getElementById('textToSpeak').value = text;
     }
-    // @ts-ignore
-    var sdk = new SDKConnection();
-    // @ts-ignore
-    var web = new WebAvatar();
-    web.version = 8.5;
-    web.connection = sdk;
-    web.avatar = "13974718";
-    web.nativeVoiceName = "Microsoft Tolga - Turkish (Turkey)";
-    web.nativeVoice = true;
-    web.boxLocation = "bottom-left";
-    web.width = "330";
-    web.createBox();
-    const avatar = document.querySelector('#img-div div').shadowRoot;
-    const avatarDiv = avatar.getElementById('avatar-avatarbox');
-    avatarDiv.style.position = 'unset';
-    //@ts-ignore
-    avatarDiv.getElementsByClassName('avatar-avatarboxmenu')[0].style.width = 'unset';
-    web.addMessage(text, "", "", "");
-    web.processMessages();
+    if (document.getElementById('record') && text !== '' && text !== null && text !== undefined) {
+      document.getElementById('record').click();
+    }
+  }
+
+  private setYourScriptTag(id: string, src: string, content: string) {
+    const s = this.doc.createElement('script');
+    s.type = 'text/javascript';
+    s.id = id;
+    if (src !== '') {
+      s.src = src;
+    } else {
+      s.innerHTML = content;
+    }
+    const head = this.doc.getElementsByTagName('footer')[0];
+    head.appendChild(s);
   }
 
 }
