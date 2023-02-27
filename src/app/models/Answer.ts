@@ -1,7 +1,9 @@
 export class Answer{
-  status: boolean;
-  time: number;
+  status: number;
+  date: number;
   content: string;
+  requestTime: number;
+  askedQuery:string;
 
   prepare(input?:any){
     Object.assign(this, input);

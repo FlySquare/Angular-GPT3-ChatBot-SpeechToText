@@ -8,7 +8,8 @@ declare var webkitSpeechRecognition: any;
 export class VoiceRecognitionService {
   recognition = new webkitSpeechRecognition();
   newText = new BehaviorSubject(null);
-  
+  canSpeak = new BehaviorSubject(false);
+
   public text = '';
   tempWords: any;
   transcriptArr: any[] = [];
@@ -49,6 +50,10 @@ export class VoiceRecognitionService {
         this.isStoppedAutomatically = true;
       }
     });
+  }
+
+  setCanSpeak(value: boolean) {
+    this.canSpeak.next(value);
   }
 
   start() {

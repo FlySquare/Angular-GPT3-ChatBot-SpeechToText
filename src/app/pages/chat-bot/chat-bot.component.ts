@@ -1,7 +1,8 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {GlobalService} from "../../services/global.service";
 import {Message} from "../../models/Message";
 import {Action} from "../../models/Action";
+import {PythonGlobalService} from "../../services/pythonGlobal.service";
 
 @Component({
   selector: 'app-chat-bot',
@@ -9,7 +10,7 @@ import {Action} from "../../models/Action";
   styleUrls: ['./chat-bot.component.scss']
 })
 export class ChatBotComponent implements OnInit {
-  @ViewChild('textAreaElement') textAreaElement : HTMLTextAreaElement;
+  @ViewChild('textAreaElement') textAreaElement : ElementRef;
   textArea = '';
   actions: Action[] = [];
   askToAi = true;
@@ -17,8 +18,10 @@ export class ChatBotComponent implements OnInit {
   selectedAction: Action;
   messages: Message[] = [];
 
-  constructor(private globalService: GlobalService) {
-  }
+  constructor(
+    private globalService: GlobalService,
+    private pythonGlobal: PythonGlobalService
+) {}
 
   ngOnInit() {
     this.actions = this.globalService.chatActions;
@@ -37,7 +40,8 @@ export class ChatBotComponent implements OnInit {
       messageAuthor: 'customer',
       date: new Date().getHours() + ':' + new Date().getUTCMinutes()
     }));
-    this.sleep(1000).then(r => {
+    this.scrollToBottom();
+    this.globalService.sleep(1000).then(r => {
       this.messages.push(new Message().prepare({
         message: action.answer,
         messageAuthor: 'ai',
@@ -48,23 +52,41 @@ export class ChatBotComponent implements OnInit {
         this.isActionActive = true;
       }
       this.selectedAction = action;
+      this.scrollToBottom();
     });
   }
 
-  sleep(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+  scrollToBottom() {
+    let interval = 0;
+    const messagesInterval = setInterval(() => {
+      interval += 100;
+      document.getElementById('messages').scrollTo(99999,99999);
+      this.textAreaElement.nativeElement.focus();
+      if (interval > 300) clearInterval(messagesInterval);
+    }, 100);
   }
 
   sendMessage() {
+    if (this.textArea == '') return;
+    for (let action of this.actions) {
+     let text = this.textArea.toLowerCase();
+      if (text.includes(action.text.split('?').join('').toLowerCase())){
+        this.setAction(action);
+        this.textArea = '';
+        this.scrollToBottom();
+        return;
+      }
+    }
     this.messages.push(new Message().prepare({
       message: this.textArea,
       messageAuthor: 'customer',
       date: new Date().getHours() + ':' + new Date().getUTCMinutes()
     }));
+    this.scrollToBottom();
     if (this.askToAi) {
       this.getAnswer(this.textArea);
     }else{
-      this.sleep(1000).then(r => {
+      this.globalService.sleep(1000).then(r => {
         this.isActionActive = true;
         if (this.selectedAction.name == 'cargo') {
           this.messages.push(new Message().prepare({
@@ -79,6 +101,7 @@ export class ChatBotComponent implements OnInit {
             date: new Date().getHours() + ':' + new Date().getUTCMinutes()
           }));
         }
+        this.scrollToBottom();
       });
       this.askToAi = true;
     }
@@ -86,13 +109,23 @@ export class ChatBotComponent implements OnInit {
   }
 
   getAnswer(query:string) {
-    this.globalService.getAnswer(query).subscribe((data) => {
-      this.messages.push(new Message().prepare({
-        message: data.content,
-        messageAuthor: 'ai',
-        date: new Date().getHours() + ':' + new Date().getUTCMinutes()
-      }));
-      //todo: scroll to bottom
+    this.pythonGlobal.getAnswer(query).subscribe((data) => {
+      if(data.content === 'undefined'){
+        this.globalService.getAnswer(query).subscribe((dataAnswer) => {
+          this.messages.push(new Message().prepare({
+            message: dataAnswer.content,
+            messageAuthor: 'ai',
+            date: new Date().getHours() + ':' + new Date().getUTCMinutes()
+          }));
+        });
+      }else{
+        this.messages.push(new Message().prepare({
+          message: data.content,
+          messageAuthor: 'ai',
+          date: new Date().getHours() + ':' + new Date().getUTCMinutes()
+        }));
+      }
+      this.scrollToBottom();
     });
   }
 

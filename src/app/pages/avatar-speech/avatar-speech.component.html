@@ -2,14 +2,17 @@
   <div class="avatar">
     <app-avatar></app-avatar>
   </div>
+  <p class="lastAnswer" #lastAnswer></p>
   <hr>
   <div class="mic">
     <div class="micResponse">
-      <p *ngIf="service.text !== ''">Algılanan Ses: {{ service.text }}</p>
+      <p *ngIf="service.text !== ''">Siz: {{ service.text }}</p>
     </div>
-    <i (click)="stopService()" *ngIf="micIsEnabled" class="fa fa-microphone" aria-hidden="true"></i>
-    <i (click)="startService()" *ngIf="!micIsEnabled" class="fa fa-microphone-slash" aria-hidden="true"></i>
-    <small *ngIf="!micIsEnabled">Test etmeye mikforonunuzu açarak başlayabilirsiniz!</small>
-    <small *ngIf="micIsEnabled">Botun cevap vermesi için lütfen mikrofonunuzu kapatın!</small>
+    <i (click)="stopService()" *ngIf="micIsEnabled && canSpeak" class="fa fa-microphone" aria-hidden="true"></i>
+    <i (click)="startService()" *ngIf="!micIsEnabled && canSpeak" class="fa fa-microphone-slash" aria-hidden="true"></i>
+    <img *ngIf="!canSpeak" src="assets/images/loading-gif.gif" alt="">
+    <small class="info" *ngIf="!micIsEnabled">Test etmeye mikforonunuzu açarak başlayabilirsiniz!</small>
+    <small class="info" *ngIf="micIsEnabled">Botun cevap vermesi için lütfen mikrofonunuzu kapatın!</small>
+    <small>Botun cevap vermesi sistem yoğunluğuna/düşünmeye bağlı olarak 1-10 saniye arası sürebilir</small>
   </div>
 </div>

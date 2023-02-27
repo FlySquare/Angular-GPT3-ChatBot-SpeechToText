@@ -17,35 +17,35 @@ export class GlobalService {
       text: 'Kargom Nerede?',
       icon: 'fa fa-person',
       answer: 'Kargonuzu sorgulamam için lütfen kargo numaranızı yazınız.'
-    },
-    {
-      name: 'rockCertificate',
-      aiStop: false,
-      text: 'Taşların Sertifikaları Var Mı?',
-      icon: 'fa fa-person',
-      answer: 'Kargonuzu sorgulamam için lütfen kargo numaranızı yazınız2.'
-    },
+    }
   ].map((action) => new Action().prepare(action));
 
   constructor(
-    private apiService: ApiService,
-  ) {
-  }
+    private apiService: ApiService
+  ) {}
 
   updateAiResponseText(text: string) {
     this.aiResponseText.next(text);
   }
 
+  sleep(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
   getAnswer(query: string, isAvatar = false): Observable<Answer> {
-    return this.apiService.post('getAnswer', {query}).pipe(
-      map((response: Response) => {
-        let data = new Answer().prepare(response.data);
-        if (isAvatar) {
-          this.updateAiResponseText(data.content);
-        }
-        return data;
-      })
-    );
+    if (query !== '') {
+      return this.apiService.post('getAnswer', {query}).pipe(
+        map((response: Response) => {
+          let data = new Answer().prepare(response.data);
+          if (isAvatar) {
+            this.updateAiResponseText(data.content);
+          }
+          return data;
+        })
+      );
+    } else {
+      return new Observable<Answer>();
+    }
   }
 
 }

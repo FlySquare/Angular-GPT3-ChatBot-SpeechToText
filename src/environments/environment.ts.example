@@ -1,6 +1,7 @@
 export const environment = {
   production: false,
   endpoint: 'http://127.0.0.1:5151/api/',
+  metaAIEndpoint: 'http://127.0.0.1:5152/api/',
   q1: '',
   q2: '',
   q3: '',

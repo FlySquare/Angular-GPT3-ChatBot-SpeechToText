@@ -1,5 +1,5 @@
 <div class="content">
-  <div class="messages">
+  <div id="messages" class="messages">
     <div *ngFor="let message of messages;let index = index" class="asd">
       <div *ngIf="message.messageAuthor === 'ai'" class="ai">
         <div class="aiMessage">
@@ -28,12 +28,12 @@
 
   </div>
   <div class="textArea">
-    <textarea (keydown.enter)="sendMessage()" [disabled]="messages[messages.length - 1].messageAuthor === 'customer'"
+    <textarea #textAreaElement (keydown.enter)="sendMessage()" [disabled]="messages[messages.length - 1].messageAuthor === 'customer'"
               id="textArea" [(ngModel)]="textArea" name="textArea" rows="3"
               placeholder="İstediğinizi sorun..."></textarea>
     <button [disabled]="messages[messages.length - 1].messageAuthor === 'customer'" id="sendButton"
             class="btn btn-success" type="button" (click)="sendMessage()" name="sendButton">Soru Sor
     </button>
-    <small>Botun cevap vermesi sistem yoğunluğuna bağlı olarak 5-40 saniye arası sürebilir</small>
+    <small>Botun cevap vermesi sistem yoğunluğuna/düşünmeye bağlı olarak 1-10 saniye arası sürebilir</small>
   </div>
 </div>
