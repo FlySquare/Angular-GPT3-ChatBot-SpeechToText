@@ -1,18 +1,13 @@
 <div class="content">
   <div id="messages" class="messages">
     <div *ngFor="let message of messages;let index = index" class="asd">
-      <div *ngIf="message.messageAuthor === 'ai'" class="ai">
+      <div *ngIf="message.messageAuthor === 'ai' || message.messageAuthor === 'ai-gpt'" class="ai">
         <div class="aiMessage">
           <div class="image">
-            <img src="assets/images/chat-avatar.png" alt="chat-avatar">
+            <img (click)="showReplyInfo($event, message)" src="assets/images/chat-avatar{{ message.messageAuthor === 'ai-gpt' ? '-gpt' : ''}}.png" alt="chat-avatar">
             <small>{{message.date}}</small>
           </div>
           <p>{{message.message}}</p>
-        </div>
-        <div *ngIf="index === messages.length - 1 && isActionActive" class="actions">
-          <div (click)="setAction(action)" *ngFor="let action of actions" class="actionDetail">
-            {{ action.text }}
-          </div>
         </div>
       </div>
       <div *ngIf="message.messageAuthor === 'customer'" class="customer">
@@ -31,9 +26,29 @@
     <textarea #textAreaElement (keydown.enter)="sendMessage()" [disabled]="messages[messages.length - 1].messageAuthor === 'customer'"
               id="textArea" [(ngModel)]="textArea" name="textArea" rows="3"
               placeholder="İstediğinizi sorun..."></textarea>
-    <button [disabled]="messages[messages.length - 1].messageAuthor === 'customer'" id="sendButton"
-            class="btn btn-success" type="button" (click)="sendMessage()" name="sendButton">Soru Sor
-    </button>
+    <div class="buttons">
+      <button [disabled]="messages[messages.length - 1].messageAuthor === 'customer'" id="sendButton"
+              class="btn btn-success" type="button" (click)="sendMessage()" name="sendButton">Soru Sor
+      </button>
+      <button (click)="showActions(content)" class="btn btn-warning">Özel Aksiyonlar</button>
+    </div>
     <small>Botun cevap vermesi sistem yoğunluğuna/düşünmeye bağlı olarak 1-10 saniye arası sürebilir</small>
   </div>
+  <ng-template #content let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" style="color: black" id="modal-basic-title">Özel Aksiyonlar</h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <form>
+        <div class="mb-3">
+          <div *ngIf="isActionActive" class="actions">
+            <div (click)="setAction(action);modal.dismiss('Cross click')" *ngFor="let action of actions" class="actionDetail">
+              {{ action.text }}
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </ng-template>
 </div>

@@ -3,6 +3,7 @@ import {GlobalService} from "../../services/global.service";
 import {Message} from "../../models/Message";
 import {Action} from "../../models/Action";
 import {PythonGlobalService} from "../../services/pythonGlobal.service";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: 'app-chat-bot',
@@ -20,7 +21,8 @@ export class ChatBotComponent implements OnInit {
 
   constructor(
     private globalService: GlobalService,
-    private pythonGlobal: PythonGlobalService
+    private pythonGlobal: PythonGlobalService,
+    private modalService: NgbModal
 ) {}
 
   ngOnInit() {
@@ -110,11 +112,12 @@ export class ChatBotComponent implements OnInit {
 
   getAnswer(query:string) {
     this.pythonGlobal.getAnswer(query).subscribe((data) => {
-      if(data.content === 'undefined'){
+      if(data.content === 'undefined' || data.content === 'Undefined'){
         this.globalService.getAnswer(query).subscribe((dataAnswer) => {
           this.messages.push(new Message().prepare({
             message: dataAnswer.content,
-            messageAuthor: 'ai',
+            answer: dataAnswer,
+            messageAuthor: 'ai-gpt',
             date: new Date().getHours() + ':' + new Date().getUTCMinutes()
           }));
         });
@@ -122,11 +125,22 @@ export class ChatBotComponent implements OnInit {
         this.messages.push(new Message().prepare({
           message: data.content,
           messageAuthor: 'ai',
+          answer: data,
           date: new Date().getHours() + ':' + new Date().getUTCMinutes()
         }));
       }
       this.scrollToBottom();
     });
+  }
+
+  showActions(content: any){
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
+  }
+
+  showReplyInfo(event: any,message: Message) {
+     if (message.answer && event.detail === 3) {
+       alert(`Cevap Hızı: ${message.answer.requestTime}`)
+     }
   }
 
 }
